@@ -1,0 +1,27 @@
+.search-message {
+    padding: 24px;
+    font-size: 16px;
+}
+
+.uk-icon-link {
+    fill: pink;
+    color: #9e319d;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+
+}
+
+.card-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    box-orient: vertical;
+}
