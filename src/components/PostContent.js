@@ -1,39 +1,27 @@
-import {useState, useCallback} from "react";
+import {useState} from "react";
 import CommentItem from "./CommentItem";
 import {useHistory} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {addNewComment} from "../store/actions";
 
-function PostContent({title}) {
+const PostContent = () => {
 
-    const [submitted, setSubmitted] = useState(false)
-    const [newComment, setNewComment] = useState({name: "", email: "", comment: ""});
-    const [comments, setComments] = useState ([]);
     const history = useHistory();
+    const dispatch = useDispatch()
+    const comments = useSelector(state => state.commentsReducer.comments)
+
+    const [newComment, setNewComment] = useState({name: "", email: "", text: ""});
 
     const handleGoBack = () => {
            history.goBack();
     }
 
-    const handleSubmit = useCallback (async (e) => {
+    const handleSubmit = ( (e) => {
         e.preventDefault();
         const form = e.target;
         form.reset();
-
-        const response = await fetch('http://localhost:3000/comments', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                id: Math.random(),
-                name: newComment.name,
-                email: newComment.email,
-                comment: newComment.comment
-            })
-        })
-        const data = await response.json();
-        const updatedComments=[...comments]
-        updatedComments.push(data);
-        setComments(updatedComments)
-        setSubmitted(true)
-    },[comments, newComment])
+        dispatch(addNewComment(newComment));
+    })
 
     return (
         <div className="uk-section">
@@ -45,7 +33,7 @@ function PostContent({title}) {
                         onClick = {handleGoBack}
                     >
                     </button>
-                    <span className="uk-margin-right">{title}</span>
+                    <span className="uk-margin-right">Title</span>
                     <a className="uk-text-small" href="#">Author</a>
                 </h1>
                 <div className="uk-article uk-dropcap uk-margin-large-bottom">
@@ -68,10 +56,10 @@ function PostContent({title}) {
                 <hr></hr>
                     <h3 className="uk-margin-remove-top">Comments:</h3>
                 <div className="uk-comments">
-                    {submitted === true && comments.map((comment) =>
+                    {comments.map((comment) =>
                             <CommentItem
-                                key={comment.id}
-                                comment={comment}
+                                key = {comment.content.id}
+                                comment = {comment.content}
                             />
                     )}
                 </div>
@@ -112,7 +100,7 @@ function PostContent({title}) {
                                     required
                                     name="textarea"
                                     onChange={(e)=> setNewComment(
-                                        {...newComment, comment: e.target.value})}
+                                        {...newComment, text: e.target.value})}
                                 >
                                 </textarea>
                             </div>

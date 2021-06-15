@@ -1,10 +1,12 @@
-import {SET_POSTS} from "../actions";
+import {GET_POSTS} from "../actions";
 
-const posts = [];
+const initialState = {
+    posts: []
+}
 
-export default function postsReducer (state = posts, action) {
+export default function postsReducer (state = initialState, action) {
     switch (action.type) {
-        case SET_POSTS:
+        case GET_POSTS:
             return {
                 posts: action.payload,
                 totalCount: action.count,

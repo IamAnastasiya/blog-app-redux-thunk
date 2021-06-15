@@ -1,21 +1,27 @@
 import AlbumItem from "../components/AlbumItem";
 import 'antd/dist/antd.css';
 import { Pagination } from 'antd';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {doubleRouteParamsFilter, updateRouteParamsPage} from "../store/actions";
 
-function AlbumsPage ({ setPage, filterLimit, currentPage, loadMoreAlbums}) {
+function AlbumsPage () {
 
+    const filterLimit = useSelector(state => state.routeReducer.filterLimit);
+    const currentPage = useSelector(state => state.routeReducer.currentPage);
+    const albums = useSelector(state => state.albumsReducer.albums);
     const totalAlbumsCount = useSelector(state => state.albumsReducer.totalCount)
+    const dispatch = useDispatch();
+    console.log(albums)
 
     const onChange = (pageNumber) => {
-        setPage (pageNumber)
+        dispatch(updateRouteParamsPage(pageNumber))
     }
 
     return <div>
         <div className="uk-section">
             <div className="uk-container">
                 <div className="uk-grid uk-child-width-1-2@s uk-child-width-1-3@m">
-                        {useSelector(state => state.albumsReducer.albums).map((album) => <AlbumItem
+                        {albums.map((album) => <AlbumItem
                             key={album.id}
                             album={album}
                             id={album.id}
@@ -26,7 +32,7 @@ function AlbumsPage ({ setPage, filterLimit, currentPage, loadMoreAlbums}) {
             <div className="uk-margin">
                 <button
                     className="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom"
-                    onClick = {loadMoreAlbums}
+                    onClick = {()=> dispatch(doubleRouteParamsFilter(filterLimit))}
                 >
                     Load more
                 </button>

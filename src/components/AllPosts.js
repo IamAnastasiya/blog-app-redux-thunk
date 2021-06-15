@@ -15,14 +15,15 @@ function AllPosts ({listClicked, getPostData}) {
                 "uk-grid uk-child-width-1-2@s uk-child-width-1-2@m"
                 : "uk-grid uk-child-width-1-2@s uk-child-width-1-3@m"}
             >
-                {posts.map((post) =>
-                    listClicked ? <PostItemList
+                {listClicked ?
+                    posts.map((post) => <PostItemList
                             key={post.id}
                             post={post}
                             getPostData={getPostData}
                             favorites={favorites}
-                        /> :
-                        <PostItemGrid
+                        />)
+                    :
+                    posts.map((post) => <PostItemGrid
                             key={post.id}
                             post={post}
                             getPostData={getPostData}

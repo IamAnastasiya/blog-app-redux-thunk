@@ -1,8 +1,9 @@
 import {useDispatch} from "react-redux"
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import {addToFavorite, removeFromFavorites} from "../store/actions";
+import React from "react";
 
-function PostItemGrid ({post, getPostData, favorites}) {
+function PostItemGrid ({post, favorites}) {
 
     const dispatch = useDispatch()
 
@@ -19,6 +20,7 @@ function PostItemGrid ({post, getPostData, favorites}) {
         }
     }
 
+
     return <div>
         <div>
             <div className="uk-card uk-card-default uk-margin-medium-bottom">
@@ -34,13 +36,12 @@ function PostItemGrid ({post, getPostData, favorites}) {
                     <p className="card-text">{post.body}</p>
                 </div>
                 <div className="uk-card-footer">
-                    <Link
+                    <NavLink
                         className="uk-button uk-button-text"
                         to={`/post/${post.id}`}
-                        onClick={()=>getPostData(post.title, post.id)}
                     >
                         Read more
-                    </Link>
+                    </NavLink>
                 </div>
             </div>
         </div>

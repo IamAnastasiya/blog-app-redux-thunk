@@ -2,27 +2,31 @@ import SelectNumber from "./SelectNumber";
 import SelectOrder from "./SelectOrder";
 import useDebounce from "./useDebounce";
 import { useState, useEffect } from "react"
+import {useDispatch, useSelector} from "react-redux";
+import {getPosts} from "../store/actions";
 
 
-function FilteringBar ({sortOrder, filterByNumber, searchTerm, setDisplayList}) {
-    const [term, setTerm] = useState("")
-    const [isListBtnActive, setListBtnActive] = useState(false)
-
-    const handleGridClick = () => {
-        setListBtnActive(false)
-        setDisplayList(false)
-    }
-
-    const handleListClick = () => {
-        setListBtnActive(true)
-        setDisplayList(true)
-    }
-
-    const debouncedSearchTerm = useDebounce(term, 2000);
+function FilteringBar ({ listClicked, setListClicked}) {
+    const [input, setSearchInput] = useState("")
+    const [searchTerm, setSearchTerm] = useState("")
+    const debouncedSearchTerm = useDebounce(input, 1500);
+    const routeParams = useSelector(state => state.routeReducer);
+    const dispatch = useDispatch();
+    const postsRoute = `https://jsonplaceholder.typicode.com/posts?_page=${routeParams.currentPage}&start=0&_limit=${routeParams.filterLimit}&_sort=id&_order=${routeParams.orderValue}`
+    const searchRoute = `https://jsonplaceholder.typicode.com/posts?q=${searchTerm}`
 
     useEffect(() => {
-        searchTerm(debouncedSearchTerm)
-    }, [searchTerm, debouncedSearchTerm])
+        setSearchTerm( debouncedSearchTerm);
+    }, [debouncedSearchTerm])
+
+    useEffect(() => {
+        searchTerm !== "" ?
+            dispatch(getPosts(searchRoute)) : dispatch(getPosts(postsRoute))
+    }, [postsRoute, searchRoute, searchTerm, dispatch])
+
+    useEffect(() => {
+        setSearchTerm ("")
+    }, [postsRoute])
 
     return <div className="uk-container">
     <div className="uk-margin-medium-bottom uk-flex uk-flex-between">
@@ -34,30 +38,30 @@ function FilteringBar ({sortOrder, filterByNumber, searchTerm, setDisplayList}) 
                     className="uk-input"
                     type="search"
                     placeholder="Search..."
-                    onChange={(e) => setTerm (e.currentTarget.value)}
+                    onChange={(e) => setSearchInput (e.currentTarget.value)}
                 />
             </div>
         </form>
 
         <div className="uk-flex">
-            <SelectOrder sortOrder={sortOrder}/>
-            <SelectNumber filterByNumber={filterByNumber}/>
+            <SelectOrder/>
+            <SelectNumber/>
 
 
             <div className="uk-button-group uk-margin-left">
                 <button
-                    className={!isListBtnActive ?
-                        "uk-button uk-button-default uk-active" :
-                        "uk-button uk-button-default"}
-                    onClick={handleGridClick}
+                    className={listClicked ?
+                        "uk-button uk-button-default" :
+                        "uk-button uk-button-default uk-active"}
+                    onClick={()=> setListClicked(false)}
                 >
                     <span data-uk-icon="icon:  grid"> </span>
                 </button>
                 <button
-                    className={isListBtnActive ?
-                        "uk-button uk-button-default uk-active" :
+                    className={listClicked ?
+                        "uk-button uk-button-default uk-active"  :
                         "uk-button uk-button-default"}
-                    onClick={handleListClick}
+                    onClick={()=> setListClicked(true)}
                 >
                     <span data-uk-icon="icon:  list"> </span>
                 </button>

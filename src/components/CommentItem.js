@@ -1,5 +1,6 @@
 function CommentItem ({comment}) {
 
+
     return  <article className="uk-comment">
         <header className="uk-comment-header uk-grid uk-grid-medium uk-flex-middle">
             <div className="uk-width-expand">
@@ -12,7 +13,7 @@ function CommentItem ({comment}) {
             </div>
         </header>
         <div className="uk-comment-body">
-            <p>{comment.comment}</p>
+            <p>{comment.text}</p>
         </div>
         <hr/>
     </article>

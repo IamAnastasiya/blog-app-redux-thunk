@@ -1,13 +1,21 @@
-import {NavLink} from 'react-router-dom'
+import {NavLink, useHistory} from 'react-router-dom'
 import { useState} from "react"
 import {useDispatch, useSelector} from "react-redux";
-import {removeFromFavoriteAlbums, removeFromFavorites} from "../store/actions";
+import {removeFromFavoriteAlbums, removeFromFavorites, setInitialRoute} from "../store/actions";
 
-function Navigation ({updatePostRoute, updateAlbumsRoute}) {
+function Navigation () {
 
     const favoriteAlbums = useSelector(state => state.favoritesReducer.albums);
     const favoritePosts = useSelector(state => state.favoritesReducer.posts);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
+    const updateAlbumsRoute = () => {
+        dispatch(setInitialRoute())
+    }
+
+    const updatePostRoute = () => {
+        dispatch(setInitialRoute())
+    }
 
     const [isActiveLink, setActiveLink] = useState(true)
 
@@ -38,13 +46,23 @@ function Navigation ({updatePostRoute, updateAlbumsRoute}) {
                         className={isActiveLink ? "uk-active" : ""}
                         onClick={()=>setActiveLink(true)}
                     >
-                        <NavLink exact to="/" onClick = {updatePostRoute}>Posts</NavLink>
+                        <NavLink
+                            exact to="/"
+                            onClick = {updatePostRoute}
+                        >
+                            Posts
+                        </NavLink>
                     </li>
                     <li
                         className={isActiveLink ? "" : "uk-active"}
                         onClick={()=>setActiveLink(false)}
                     >
-                        <NavLink to="/albums" onClick = {updateAlbumsRoute}>Albums</NavLink>
+                        <NavLink
+                            to="/albums"
+                            onClick = {updateAlbumsRoute}
+                        >
+                            Albums
+                        </NavLink>
                     </li>
                 </ul>
 

@@ -1,8 +1,8 @@
-import {useDispatch, useSelector} from "react-redux"
+import {useDispatch} from "react-redux"
 import {Link} from 'react-router-dom'
 import {addToFavorite, removeFromFavorites} from "../store/actions";
 
-function PostItemList({post, getPostData, favorites}) {
+function PostItemList({post, favorites}) {
 
     const dispatch = useDispatch()
 
@@ -19,7 +19,6 @@ function PostItemList({post, getPostData, favorites}) {
             dispatch(addToFavorite(post))
         }
     }
-
 
     return <div>
         <div className="uk-card uk-card-default uk-margin-medium-bottom uk-child-width-1-2@s uk-grid-collapse uk-margin"
@@ -43,7 +42,6 @@ function PostItemList({post, getPostData, favorites}) {
                 <Link
                     className="uk-button uk-button-text"
                     to={`/post/${post.id}`}
-                    onClick={()=>getPostData(post.title, post.id)}
                 >
                     Read more
                 </Link>

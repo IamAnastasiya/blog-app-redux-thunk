@@ -3,24 +3,22 @@ import FilteringBar from "../components/FilteringBar";
 import 'antd/dist/antd.css';
 import { Pagination } from 'antd';
 import React, { useEffect, useState } from "react"
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {doubleRouteParamsFilter, updateRouteParamsPage} from "../store/actions";
 
 
-function AllPostsPage (
-    {sortOrder, filterByNumber, setPage, currentPage, filterLimit, loadMore, searchTerm, getPostData}) {
+function AllPostsPage () {
 
     const posts = useSelector(state => state.postsReducer.posts);
     const totalPostsCount = useSelector(state => state.postsReducer.totalCount)
-    console.log(posts)
+    const filterLimit = useSelector(state => state.routeReducer.filterLimit);
+    const currentPage = useSelector(state => state.routeReducer.currentPage);
 
     const [listClicked, setListClicked] = useState(false);
-
-    const setDisplayList = (value) => {
-        setListClicked(value)
-    }
+    const dispatch = useDispatch();
 
     const onChange = (pageNumber) => {
-        setPage (pageNumber)
+        dispatch(updateRouteParamsPage(pageNumber))
     }
 
     useEffect(() => {
@@ -29,20 +27,16 @@ function AllPostsPage (
 
     return <div  className="uk-section">
         <FilteringBar
-            sortOrder={sortOrder}
-            filterByNumber={filterByNumber}
-            filterLimit={filterLimit}
-            searchTerm={searchTerm}
-            setDisplayList={setDisplayList}
+            listClicked={listClicked}
+            setListClicked={setListClicked}
         />
         <AllPosts
             listClicked={listClicked}
-            getPostData={getPostData}
         />
         {posts.length > 0 && <div className="uk-margin">
                 <button
                     className="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom"
-                    onClick = {loadMore}
+                    onClick = {()=> dispatch(doubleRouteParamsFilter(filterLimit))}
                 >
                     Load more
                     <div
